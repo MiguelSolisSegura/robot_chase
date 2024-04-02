@@ -69,10 +69,16 @@ private:
 
         float error_yaw = kp_yaw_ * std::atan2(y, x);
         float error_distance = kp_distance_ * std::sqrt(x*x + y*y);
+        RCLCPP_DEBUG(this->get_logger(), "Error distance: %.4f", error_distance);
         Twist vel_msg;
-        vel_msg.angular.z = error_yaw;
-        vel_msg.linear.x = error_distance;
-
+        if (error_distance > 0.0360) {
+            vel_msg.angular.z = error_yaw;
+            vel_msg.linear.x = error_distance;
+        }
+        else {
+            vel_msg.angular.z = 0;
+            vel_msg.linear.x = 0;
+        }
         // Pubish velocity
         publisher_->publish(vel_msg);
     }
