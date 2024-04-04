@@ -43,8 +43,8 @@ private:
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
     rclcpp::Publisher<Twist>::SharedPtr publisher_{nullptr};
     rclcpp::TimerBase::SharedPtr timer_{nullptr};
-    const float kp_yaw_ = 0.25;
-    const float kp_distance_ = 0.1; 
+    const float kp_yaw_ = 1.5;
+    const float kp_distance_ = 0.2; 
     
     // Methods
     void on_timer() {
@@ -71,7 +71,7 @@ private:
         float error_distance = kp_distance_ * std::sqrt(x*x + y*y);
         RCLCPP_DEBUG(this->get_logger(), "Error distance: %.4f", error_distance);
         Twist vel_msg;
-        if (error_distance > 0.0360) {
+        if (error_distance > 0.08) {
             vel_msg.angular.z = error_yaw;
             vel_msg.linear.x = error_distance;
         }
